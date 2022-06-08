@@ -90,3 +90,14 @@ Run a container:
 docker run -it --rm my-package hello-world "Python test"
 ```
 
+## Resources
+Rare Disease Data:
+1. EJPRD: https://resourcemap.ejprarediseases.org/#/
+2. ORPHADATA: http://www.orphadata.org/cgi-bin/index.php#hoommodal
+
+Code:
+1. Deepgozero: https://github.com/bio-ontology-research-group/deepgozero
+2. Ontology with Machine Learning: https://github.com/bio-ontology-research-group/machine-learning-with-ontologies
+3. OntoZSL: https://github.com/genggengcss/OntoZSL
+4. DP-CGANS: https://github.com/sunchang0124/dp_cgans
+
