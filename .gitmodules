@@ -1,3 +1,6 @@
 [submodule "el-embeddings"]
 	path = el-embeddings
 	url = https://github.com/cudillal/el-embeddings
+[submodule "tarql"]
+	path = tarql
+	url = https://github.com/tarql/tarql
