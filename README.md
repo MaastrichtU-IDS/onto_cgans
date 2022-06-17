@@ -13,7 +13,6 @@ Write a short description of the software here.
 ## Prerequisites
 
 * Python 3.9 or higher, with [pip](https://pip.pypa.io/en/stable/)
-* [groovy](https://groovy.apache.org/index.html)
 * Docker (optional)
 
 ## Installation
