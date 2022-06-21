@@ -1,6 +1,31 @@
 [![Run tests](https://github.com/MaastrichtU-IDS/python-template/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/python-template/actions?query=workflow%3A%22Run+tests%22)
 
-## How to use this template
+## Onto-CGANS 
+This repository is still working in progress. The project aims to embed ontology (human knowledge) to GAN (Generative Adversarial Network) to generate unseen classes.
+
+<img src="https://github.com/MaastrichtU-IDS/onto_cgans/blob/master/onto_cgans.jpg" width="600">
+
+
+## Method steps
+1. Find suitable and matched data and ontology. (The ontology should describe the data. For example, the data from parkinson and alzheimer patients and ontologies about these two diseases)
+2. Convert ontology and data to right format/expressions
+3. Embed ontology to conditional vectors
+4. Add the conditional vectors (the embedded ontology) to the generator in DP-CGANS
+5. ...
+
+
+## Resources
+Rare Disease Data:
+1. EJPRD: https://resourcemap.ejprarediseases.org/#/
+2. ORPHADATA: http://www.orphadata.org/cgi-bin/index.php#hoommodal
+
+Code:
+1. Deepgozero: https://github.com/bio-ontology-research-group/deepgozero
+2. Ontology with Machine Learning: https://github.com/bio-ontology-research-group/machine-learning-with-ontologies
+3. OntoZSL: https://github.com/genggengcss/OntoZSL
+4. DP-CGANS: https://github.com/sunchang0124/dp_cgans
+
+<!-- ## How to use this template
 
 * For the directory name, *Dockerfile*, *setup.py* and *test_application.py*, Replace all instances of **my_package** and **my-package** to the package name of your choice using [snake case](https://en.wikipedia.org/wiki/Snake_case) or dash depending on the convention.
 * Leave the headers as is and update the instructions below to the specifics of your tool.
@@ -88,16 +113,5 @@ Run a container:
 
 ```bash
 docker run -it --rm my-package hello-world "Python test"
-```
-
-## Resources
-Rare Disease Data:
-1. EJPRD: https://resourcemap.ejprarediseases.org/#/
-2. ORPHADATA: http://www.orphadata.org/cgi-bin/index.php#hoommodal
-
-Code:
-1. Deepgozero: https://github.com/bio-ontology-research-group/deepgozero
-2. Ontology with Machine Learning: https://github.com/bio-ontology-research-group/machine-learning-with-ontologies
-3. OntoZSL: https://github.com/genggengcss/OntoZSL
-4. DP-CGANS: https://github.com/sunchang0124/dp_cgans
+``` -->
 
