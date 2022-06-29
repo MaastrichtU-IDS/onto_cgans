@@ -25,6 +25,10 @@ Code:
 3. OntoZSL: https://github.com/genggengcss/OntoZSL
 4. DP-CGANS: https://github.com/sunchang0124/dp_cgans
 
+Study materials:
+1. Knowledge Graph Embedding Tutorial: https://kge-tutorial-ecai2020.github.io/
+2. Biomedical ontology embedding: https://github.com/bio-ontology-research-group/machine-learning-with-ontologies
+
 <!-- ## How to use this template
 
 * For the directory name, *Dockerfile*, *setup.py* and *test_application.py*, Replace all instances of **my_package** and **my-package** to the package name of your choice using [snake case](https://en.wikipedia.org/wiki/Snake_case) or dash depending on the convention.
