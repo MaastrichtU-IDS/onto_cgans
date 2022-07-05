@@ -1,4 +1,5 @@
-### 2021-11-16 ###
+# -*- coding: utf-8 -*-
+# ## 2021-11-16 ###
 # pos_weight in BCEWithLogitsLoss model #
 # sigma = 5 #
 # delta = 2e-6 #
@@ -96,7 +97,7 @@ class Generator(Module):
         return data
 
 
-class DPCGANSynthesizer(BaseSynthesizer):
+class Onto_DPCGANSynthesizer(BaseSynthesizer):
     """Conditional Table GAN Synthesizer.
 
     This is the core class of the CTGAN project, where the different components
@@ -142,12 +143,16 @@ class DPCGANSynthesizer(BaseSynthesizer):
             Defaults to ``True``.
     """
 
-    def __init__(self, embedding_dim=128, generator_dim=(256, 256), discriminator_dim=(256, 256),
+    def __init__(self, entity_embed_file, rel_embed_file, embedding_dim=128, 
+                 generator_dim=(256, 256), discriminator_dim=(256, 256),
                  generator_lr=2e-4, generator_decay=1e-6, discriminator_lr=2e-4,
                  discriminator_decay=1e-6, batch_size=500, discriminator_steps=1,
                  log_frequency=True, verbose=False, epochs=300, pac=10, cuda=True, private=False, conditional_columns=None):
 
         assert batch_size % 2 == 0
+
+        self._entity_embed_file = entity_embed_file
+        self._rel_embed_file = rel_embed_file
 
         self._embedding_dim = embedding_dim
         self._generator_dim = generator_dim
@@ -211,7 +216,7 @@ class DPCGANSynthesizer(BaseSynthesizer):
         return functional.gumbel_softmax(logits, tau=tau, hard=hard, eps=eps, dim=dim)
 
     def _apply_activate(self, data):
-        """Apply proper activation function to the output of the  ."""
+        """Apply proper activation function to the output of the generator."""
         data_t = []
         st = 0
         for column_info in self._transformer.output_info_list:
@@ -431,25 +436,8 @@ class DPCGANSynthesizer(BaseSynthesizer):
                         for n in range(self._discriminator_steps):
                             fakez = torch.normal(mean=mean, std=std)
 
-                            # condvec = self._data_sampler.sample_condvec(self._batch_size)
-
                             condvec_pair = self._data_sampler.sample_condvec_pair(self._batch_size)
                             c_pair_1, m_pair_1, col_pair_1, opt_pair_1 = condvec_pair
-
-                            # if condvec is None:
-                            #     c1, m1, col, opt = None, None, None, None
-                            #     real = self._data_sampler.sample_data(self._batch_size, col, opt)
-                            # else:
-                            #     c1, m1, col, opt = condvec
-                            #     c1 = torch.from_numpy(c1).to(self._device)
-                            #     m1 = torch.from_numpy(m1).to(self._device)
-                            #     fakez = torch.cat([fakez, c1], dim=1)
-
-                            #     perm = np.arange(self._batch_size)
-                            #     np.random.shuffle(perm)
-                            #     real = self._data_sampler.sample_data(
-                            #         self._batch_size, col[perm], opt[perm])
-                            #     c2 = c1[perm]
 
                             if condvec_pair is None:
                                 c_pair_1, m_pair_1, col_pair_1, opt_pair_1 = None, None, None, None
@@ -466,15 +454,11 @@ class DPCGANSynthesizer(BaseSynthesizer):
                                 real = self._data_sampler.sample_data_pair(self._batch_size, col_pair_1[perm], opt_pair_1[perm])
                                 c_pair_2 = c_pair_1[perm]
 
-
                             fake = self._generator(fakez) # categories (unique value count) + continuous (1+n_components)
                             fakeact = self._apply_activate(fake)
 
                             real = torch.from_numpy(real.astype('float32')).to(self._device)
 
-                            # if c1 is not None:
-                                # fake_cat = torch.cat([fakeact, c1], dim=1)
-                                # real_cat = torch.cat([real, c2], dim=1)
                             if col_pair_1 is not None:
                                 fake_cat = torch.cat([fakeact, c_pair_1], dim=1)
                                 real_cat = torch.cat([real, c_pair_2], dim=1)

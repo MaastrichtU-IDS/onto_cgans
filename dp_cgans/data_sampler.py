@@ -305,6 +305,71 @@ class DataSampler(object):
         ### pair_id_in_col, 
 
 
+    def sample_onto_condvec_pair(self, batch):
+        """Generate the conditional vector for training.
+
+        Returns:
+            cond (batch x #categories):
+                The conditional vector.
+            mask (batch x #discrete columns):
+                A one-hot vector indicating the selected discrete column.
+            discrete column id (batch):
+                Integer representation of mask.
+            category_id_in_col (batch):
+                Selected category in the selected discrete column.
+        """
+        if self._n_discrete_columns == 0:
+            return None
+
+
+        # discrete_column_id = np.random.choice(
+        #     np.arange(self._n_discrete_columns), batch)
+
+        paired_discrete_column_id = []
+        for iter_gen in range(0, batch):
+            paired_discrete_column_id.append(np.random.choice(np.arange(self._n_discrete_columns), 2, replace=False)) 
+
+        # convert paired_discrete_column_id to current_id_pair type
+        converted_paired_discrete_column_id = []
+        for each in paired_discrete_column_id:
+            converted_paired_discrete_column_id.append(self.pair_id_dict[tuple(self.get_position[np.sort(each)])])
+
+        # full_possible_combi = 0
+        # for basic_item in range(0, len(self._categories_each_column)-1):
+        #     for mul_item in range(basic_item+1, len(self._categories_each_column)):
+        #         full_possible_combi += self._categories_each_column[basic_item] * self._categories_each_column[mul_item]
+
+        cond_pair = np.zeros((batch, self._n_categories), dtype='float32') ## 
+        mask_pair = np.zeros((batch, self._n_discrete_columns), dtype='int32') ## 
+        mask_pair[np.arange(batch), np.array(paired_discrete_column_id)[:,0]] = 1
+        mask_pair[np.arange(batch), np.array(paired_discrete_column_id)[:,1]] = 1
+
+        pair_id_in_col = self._random_choice_prob_pairs(converted_paired_discrete_column_id) # category_id_in_col: (0, max_num_cateogies), --> [0,2,1,0,2,1...]
+        pair_id_decimal = (self._discrete_pair_cond_st[np.expand_dims(converted_paired_discrete_column_id,axis=1),
+                                                                    np.expand_dims(pair_id_in_col,axis=1)]).astype(int).flatten()
+
+        pair_primary_secondary_cat = []
+        pair_primary_secondary_col = []
+        for itr_decimal in range(0, len(pair_id_decimal)):
+ 
+            pair_categories = self._categories_each_column * mask_pair[itr_decimal]
+            pair_id_binary = list(np.binary_repr(pair_id_decimal[itr_decimal], width=(pair_categories.sum())))
+
+            first_cat = pair_categories[pair_categories!=0][0]
+            pair_primary_position = np.argmax(pair_id_binary[:first_cat])
+            pair_secondary_position = np.argmax(pair_id_binary[first_cat:])
+            pair_primary_secondary_cat.append([pair_primary_position, pair_secondary_position])
+
+            pair_primary_secondary_col.append(self._discrete_column_cond_st[np.where(mask_pair[itr_decimal]==1)[0]])
+
+        pair_id_all_positions = np.add(np.array(pair_primary_secondary_col), np.array(pair_primary_secondary_cat))
+
+        cond_pair[np.arange(batch), pair_id_all_positions[:,0]] = 1
+        cond_pair[np.arange(batch), pair_id_all_positions[:,1]] = 1
+
+        return cond_pair, mask_pair, np.array(converted_paired_discrete_column_id), pair_id_in_col
+
+
     def sample_original_condvec(self, batch):
         """Generate the conditional vector for generation use original frequency."""
         if self._n_discrete_columns == 0:

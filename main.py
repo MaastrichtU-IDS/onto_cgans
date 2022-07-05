@@ -1,10 +1,12 @@
 from dp_cgans import DP_CGAN
 import pandas as pd
 
-tabular_data = pd.read_csv("../persistent/data/ontology/syn_patients_data_unseen_names.txt", names=["patient_id", "rare_disease", "phenotype"])
+tabular_data = pd.read_csv("../persistent/data/syn_data/syn_patients_data_unseen_names.txt", names=["patient_id", "rare_disease", "phenotype"])
 
 # We adjusted the original CTGAN model from SDV. Instead of looking at the distribution of individual variable, we extended to two variables and keep their corrll
-model = DP_CGAN(
+model = Onto_DP_CGAN(
+    entity_embed_file='../persistent/data/ontology/save_onto_embeds/entity_500000.npy',
+    rel_embed_file='../persistent/data/ontology/save_onto_embeds/relation_500000.npy',
     epochs=2, # number of training epochs
     batch_size=1000, # the size of each batch
     log_frequency=True,
