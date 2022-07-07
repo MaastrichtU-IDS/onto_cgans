@@ -1,4 +1,4 @@
-from dp_cgans import Onto_DP_CGAN
+from dp_cgans import DP_CGAN, Onto_DP_CGAN
 import pandas as pd
 
 column_names = ["patient_id", "rare_disease", "phenotype"]
@@ -22,7 +22,7 @@ model = Onto_DP_CGAN(
 )
 
 print("Start training model")
-model.fit(tabular_data, 'test')
+model.fit(tabular_data)
 
 print('main test')
 

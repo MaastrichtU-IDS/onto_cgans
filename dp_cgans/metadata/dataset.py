@@ -379,6 +379,7 @@ class Metadata:
         errors = [] if errors is None else errors
         dtypes = dict()
         table_meta = self.get_table_meta(table_name)
+        print(table_meta['fields'].items())
         for name, field in table_meta['fields'].items():
             field_type = field['type']
             field_subtype = field.get('subtype')

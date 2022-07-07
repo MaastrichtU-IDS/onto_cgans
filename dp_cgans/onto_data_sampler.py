@@ -8,6 +8,7 @@ class Onto_DataSampler(object):
     """DataSampler samples the conditional vector and corresponding data for CTGAN."""
 
     def __init__(self, data, embeddings_fn, output_info, log_frequency):
+        print('ici c paris')
         self._data = data
 
         # retrieving the relations and entities embeddings

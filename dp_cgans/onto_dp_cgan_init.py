@@ -30,7 +30,7 @@ class DPCGANModel(BaseTabularModel):
             table_data (pandas.DataFrame):
                 Data to be learned.
         """
-        print('sa fit ou koi')
+        print('sa fit ou koiiiii')
         self._model = self._build_model()
 
         categoricals = []

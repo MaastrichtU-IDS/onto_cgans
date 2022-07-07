@@ -31,6 +31,6 @@ __all__ = (
     'DP_CGAN',
     'Onto_DP_CGAN',
     'RDF_to_Tabular',
-    'DPCGANSynthesizer'
+    'DPCGANSynthesizer',
     'Onto_DPCGANSynthesizer'
 )

@@ -398,7 +398,7 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
 
         train_data = self._transformer.transform(train_data)
 
-        self._data_sampler = OntoDataSampler(
+        self._data_sampler = Onto_DataSampler(
             train_data,
             self._embeddings_fn,
             self._transformer.output_info_list,
