@@ -1,31 +1,30 @@
-from dp_cgans import DP_CGAN
+from dp_cgans import Onto_DP_CGAN
 import pandas as pd
-import pickle as pkl
 
-tabular_data = pd.read_csv("../persistent/data/syn_data/syn_patients_data_unseen_names.txt", names=["patient_id", "rare_disease", "phenotype"])
-
-with open('../persistent/data/ontology/embeddings/Onto_TransE.pkl', 'rb') as f:
-    embeds = pkl.load(f)
-    print(dict(list(embeds.items())[0:10]))
+column_names = ["patient_id", "rare_disease", "phenotype"]
+tabular_data = pd.read_csv("../persistent/data/syn_data/small_syn_patients_data_seen_names.txt", names=column_names)
 
 # We adjusted the original CTGAN model from SDV. Instead of looking at the distribution of individual variable, we extended to two variables and keep their corrll
-"""model = Onto_DP_CGAN(
-    embeddings_path='../persistent/data/ontology/embeddings/Onto_TransE.pkl',
-    data_path='../persistent/data/ontology/save_onto_embeds/relation_500000.npy',
+model = Onto_DP_CGAN(
+    embeddings_fn='../persistent/data/ontology/embeddings/Onto_TransE.pkl',
+    primary_key=column_names, # patient_id + rd + hp is what constitutes the PK
     epochs=2, # number of training epochs
     batch_size=1000, # the size of each batch
     log_frequency=True,
     verbose=True,
+    embedding_dim=100,
     generator_dim=(128, 128, 128),
     discriminator_dim=(128, 128, 128),
     generator_lr=2e-4,
     discriminator_lr=2e-4,
     discriminator_steps=1,
     private=False,
-)"""
+)
 
 print("Start training model")
-# model.fit(tabular_data)
+model.fit(tabular_data, 'test')
+
+print('main test')
 
 # Sample the generated synthetic data
 # model.sample(100)

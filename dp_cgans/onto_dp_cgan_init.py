@@ -2,6 +2,7 @@
 
 import numpy as np
 from dp_cgans.synthesizers.dp_cgan import DPCGANSynthesizer
+from dp_cgans.synthesizers.onto_dp_cgan import Onto_DPCGANSynthesizer
 
 from dp_cgans.base import BaseTabularModel
 
@@ -29,6 +30,7 @@ class DPCGANModel(BaseTabularModel):
             table_data (pandas.DataFrame):
                 Data to be learned.
         """
+        print('sa fit ou koi')
         self._model = self._build_model()
 
         categoricals = []
@@ -82,7 +84,7 @@ class DPCGANModel(BaseTabularModel):
         raise NotImplementedError(f"{self._MODEL_CLASS} doesn't support conditional sampling.")
 
 
-class DP_CGAN(DPCGANModel):
+class Onto_DP_CGAN(DPCGANModel):
     """Model wrapping ``CTGANSynthesizer`` model.
 
     Args:
@@ -176,7 +178,7 @@ class DP_CGAN(DPCGANModel):
 
     _MODEL_CLASS = DPCGANSynthesizer
 
-    def __init__(self, entity_embed_file, rel_embed_file, field_names=None,
+    def __init__(self, embeddings_fn, field_names=None,
                  field_types=None, field_transformers=None, anonymize_fields=None,
                  primary_key=None, constraints=None, table_metadata=None,
                  embedding_dim=128, generator_dim=(256, 256), discriminator_dim=(256, 256),
@@ -198,8 +200,7 @@ class DP_CGAN(DPCGANModel):
         )
 
         self._model_kwargs = {
-            'entity_embed_file': entity_embed_file,
-            'rel_embed_file': rel_embed_file,
+            'embeddings_fn': embeddings_fn,
             'embedding_dim': embedding_dim,
             'generator_dim': generator_dim,
             'discriminator_dim': discriminator_dim,

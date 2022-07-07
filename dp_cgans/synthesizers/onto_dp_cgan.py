@@ -17,12 +17,15 @@ from dp_cgans.data_sampler import DataSampler
 from dp_cgans.data_transformer import DataTransformer
 from dp_cgans.synthesizers.base import BaseSynthesizer
 
+from dp_cgans.onto_data_sampler import Onto_DataSampler
+
 import scipy.stats
 
 ######## ADDED ########
 from datetime import datetime
 from contextlib import redirect_stdout
 from dp_cgans.rdp_accountant import compute_rdp, get_privacy_spent
+
 
 class Discriminator(Module):
 
@@ -143,7 +146,7 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
             Defaults to ``True``.
     """
 
-    def __init__(self, entity_embed_file, rel_embed_file, embedding_dim=128, 
+    def __init__(self, embeddings_fn, embedding_dim=128, 
                  generator_dim=(256, 256), discriminator_dim=(256, 256),
                  generator_lr=2e-4, generator_decay=1e-6, discriminator_lr=2e-4,
                  discriminator_decay=1e-6, batch_size=500, discriminator_steps=1,
@@ -151,8 +154,7 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
 
         assert batch_size % 2 == 0
 
-        self._entity_embed_file = entity_embed_file
-        self._rel_embed_file = rel_embed_file
+        self._embeddings_fn = embeddings_fn
 
         self._embedding_dim = embedding_dim
         self._generator_dim = generator_dim
@@ -169,6 +171,8 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
         self._verbose = verbose
         self._epochs = epochs
         self.pac = pac
+
+        print(f'verbose: {self._verbose}')
 
         self.private = private
         self.conditional_columns = conditional_columns
@@ -376,6 +380,7 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
         #     else:
         #         raise NotImplementedError("Conditional columns are not in the valid columns.",discrete_columns)
 
+        print('fitting')
 
         self._validate_discrete_columns(train_data, discrete_columns)
 
@@ -393,8 +398,9 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
 
         train_data = self._transformer.transform(train_data)
 
-        self._data_sampler = DataSampler(
+        self._data_sampler = OntoDataSampler(
             train_data,
+            self._embeddings_fn,
             self._transformer.output_info_list,
             self._log_frequency)
 

@@ -1,13 +1,18 @@
 import numpy as np
 ### Chang ###
 from functools import reduce
+import pickle as pkl
 
 
-class DataSampler(object):
+class Onto_DataSampler(object):
     """DataSampler samples the conditional vector and corresponding data for CTGAN."""
 
-    def __init__(self, data, output_info, log_frequency):
+    def __init__(self, data, embeddings_fn, output_info, log_frequency):
         self._data = data
+
+        # retrieving the relations and entities embeddings
+        with open(embeddings_fn, 'rb') as f:
+            self._embeddings = pkl.load(f)
 
         def is_discrete_column(column_info):
             return (len(column_info) == 1
@@ -59,7 +64,7 @@ class DataSampler(object):
                     if is_discrete_column(column_info_secondary):
                         span_info_secondary = column_info_secondary[0]
                         ed_secondary = st_secondary + span_info_secondary.dim
-                        
+
                         rid_by_cat_pair = []
                         combine_pair_data = np.append(data[:,st_primary:ed_primary], data[:,st_secondary:ed_secondary],axis=1)
                         combine_pair_data_decimal = reduce(lambda a,b: 2*a+b, combine_pair_data.transpose())
@@ -68,7 +73,7 @@ class DataSampler(object):
                         for uni_value in unique_pair:
                             rid_by_cat_pair.append(np.where(combine_pair_data_decimal == uni_value)[0])
                         self._rid_by_cat_cols_pair.append(rid_by_cat_pair)
-                        
+
                         st_secondary = ed_secondary
                     else:
                         st_secondary += sum([span_info.dim for span_info in column_info_secondary])
@@ -77,7 +82,7 @@ class DataSampler(object):
 
             else:
                 st_primary += sum([span_info.dim for span_info in column_info_primary])
-        
+
         assert st_primary == data.shape[1]
 
                 
@@ -108,12 +113,13 @@ class DataSampler(object):
         # self._n_categories = sum(
         #     [column_info[0].dim for column_info in output_info
         #      if is_discrete_column(column_info)]) 
-             
+
         ### Modified by Chang###        
 
-        
         self.get_position = np.array(self.get_position)
         self._n_categories = sum(self._categories_each_column)
+
+        print(f'N_categories: {self._n_categories}')
 
         self._categories_each_column = np.array(self._categories_each_column)
         second_max_category = np.partition(self._categories_each_column.flatten(), -2)[-2]
@@ -131,7 +137,7 @@ class DataSampler(object):
                 span_info = column_info[0]
                 ed = st + span_info.dim
                 category_freq = np.sum(data[:, st:ed], axis=0)
-            
+
                 if log_frequency:
                     category_freq = np.log(category_freq + 1)
                 category_prob = category_freq / np.sum(category_freq)
@@ -147,10 +153,10 @@ class DataSampler(object):
             else:
                 st += sum([span_info.dim for span_info in column_info])
 
-        
+
         ### Modified by Chang###
         st_primary = 0
-        
+
         current_id_pair = 0
         current_cond_st_pair = 0
         self.pair_id_dict = {}
