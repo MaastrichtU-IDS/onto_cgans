@@ -137,7 +137,7 @@ class Onto_BaseTabularModel:
         LOGGER.debug('Transforming table %s; shape: %s', self._metadata.name, data.shape)
         transformed = self._metadata.transform(data)
 
-        if self._metadata.get_dtypes(ids=True):
+        if self._metadata.get_dtypes(ids=False):
             LOGGER.debug(
                 'Fitting %s model to table %s', self.__class__.__name__, self._metadata.name)
             self._fit(transformed)

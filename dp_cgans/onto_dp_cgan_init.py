@@ -31,7 +31,6 @@ class DPCGANModel(Onto_BaseTabularModel):
             table_data (pandas.DataFrame):
                 Data to be learned.
         """
-        print(f'train data onto_dp_cgan._fit(): {table_data}')
         self._model = self._build_model()
 
         categoricals = []

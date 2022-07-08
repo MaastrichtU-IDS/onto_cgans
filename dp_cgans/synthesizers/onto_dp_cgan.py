@@ -373,7 +373,6 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
                 a ``pandas.DataFrame``, this list should contain the column names.
         """
 
-
         # if self.conditional_columns != None:
         #     if set(self.conditional_columns) <= set(discrete_columns):
         #         discrete_columns = self.conditional_columns
@@ -515,21 +514,19 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
                         #     c1, m1, col, opt = None, None, None, None
                         # else:
                         #     c1, m1, col, opt = condvec
-          
+
                         #     c1 = torch.from_numpy(c1).to(self._device)
                         #     m1 = torch.from_numpy(m1).to(self._device)
                         #     fakez = torch.cat([fakez, c1], dim=1)
-
 
                         if condvec_pair is None:
                             c_pair_1, m_pair_1, col_pair_1, opt_pair_1 = None, None, None, None
                         else:
                             c_pair_1, m_pair_1, col_pair_1, opt_pair_1 = condvec_pair
-          
+
                             c_pair_1 = torch.from_numpy(c_pair_1).to(self._device)
                             m_pair_1 = torch.from_numpy(m_pair_1).to(self._device)
                             fakez = torch.cat([fakez, c_pair_1], dim=1)
-            
 
                         fake = self._generator(fakez)
                         fakeact = self._apply_activate(fake)
@@ -556,14 +553,12 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
                         else:
                             cross_entropy_pair = self._cond_loss_pair(fake, c_pair_1, m_pair_1)
 
-
                         loss_g = -torch.mean(y_fake) + cross_entropy_pair # + rules_penalty
-                        
 
                         optimizerG.zero_grad()
                         loss_g.backward()
                         optimizerG.step()
-                    
+
                     if self._verbose:
                         ######## ADDED ########
                         now = datetime.now()
