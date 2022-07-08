@@ -21,10 +21,8 @@ model = Onto_DP_CGAN(
     private=False,
 )
 
-print("Start training model")
+print("Start model training")
 model.fit(tabular_data)
-
-print('main test')
 
 # Sample the generated synthetic data
 # model.sample(100)

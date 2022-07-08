@@ -5,9 +5,10 @@ from dp_cgans.synthesizers.dp_cgan import DPCGANSynthesizer
 from dp_cgans.synthesizers.onto_dp_cgan import Onto_DPCGANSynthesizer
 
 from dp_cgans.base import BaseTabularModel
+from dp_cgans.onto_base import Onto_BaseTabularModel
 
 
-class DPCGANModel(BaseTabularModel):
+class DPCGANModel(Onto_BaseTabularModel):
     """Base class for all the CTGAN models.
 
     The ``CTGANModel`` class provides a wrapper for all the CTGAN models.
@@ -30,7 +31,7 @@ class DPCGANModel(BaseTabularModel):
             table_data (pandas.DataFrame):
                 Data to be learned.
         """
-        print('sa fit ou koiiiii')
+        print(f'train data onto_dp_cgan._fit(): {table_data}')
         self._model = self._build_model()
 
         categoricals = []
@@ -176,7 +177,7 @@ class Onto_DP_CGAN(DPCGANModel):
             is given, there won't be a maximum. Defaults to ``'auto'``.
     """
 
-    _MODEL_CLASS = DPCGANSynthesizer
+    _MODEL_CLASS = Onto_DPCGANSynthesizer
 
     def __init__(self, embeddings_fn, field_names=None,
                  field_types=None, field_transformers=None, anonymize_fields=None,

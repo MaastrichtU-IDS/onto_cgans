@@ -380,7 +380,8 @@ class Onto_DPCGANSynthesizer(BaseSynthesizer):
         #     else:
         #         raise NotImplementedError("Conditional columns are not in the valid columns.",discrete_columns)
 
-        print('fitting')
+        if self._verbose:
+            print('fitting')
 
         self._validate_discrete_columns(train_data, discrete_columns)
 
