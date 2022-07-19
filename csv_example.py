@@ -1,11 +1,14 @@
-from dp_cgans import DP_CGAN
+from dp_cgans import DP_CGAN, Onto_DP_CGAN
 import pandas as pd
 
-tabular_data = pd.read_csv("dataset/example_tabular_data_UCIAdult.csv")
+tabular_data = pd.read_csv('../persistent/data/syn_data/small_syn_patients_data_seen.csv')
+# LOG FILE DIRECTORY + FRQUENCY OF LOG?
 
 # We adjusted the original CTGAN model from SDV. Instead of looking at the distribution of individual variable, we extended to two variables and keep their corrll
-model = DP_CGAN(
-    epochs=10, # number of training epochs
+model = Onto_DP_CGAN(
+    embeddings_fn='',
+    embedding_dim=100,
+    epochs=1, # number of training epochs
     batch_size=1000, # the size of each batch
     log_frequency=True,
     verbose=True,
@@ -18,7 +21,7 @@ model = DP_CGAN(
 )
 
 print("Start training model")
-model.fit(tabular_data)
+# model.fit(tabular_data)
 
 # Sample the generated synthetic data
-model.sample(100)
+# model.sample(100)
